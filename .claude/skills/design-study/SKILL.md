@@ -1,6 +1,6 @@
 ---
 name: design-study
-description: Extract design *patterns* from one or more public websites and build an inspired-by Next.js template — layout, spacing rhythm, typography hierarchy, and component composition only. ALL content (text, images, icons, logos) and brand identifiers (colors, fonts) are deliberately replaced with generic placeholders or shifted alternatives. This skill NEVER produces a copy of the target. Use this for design study, self-owned site rebuilds with a fresh take, or building inspired-by alternatives. Triggers on phrases like "design study of", "inspired by this site", "rebuild my own site referencing", "extract layout patterns from", "study the design of".
+description: Extract design *patterns* from one or more public websites and build an inspired-by Next.js template — layout, spacing rhythm, typography hierarchy, and component composition only. ALL content (text, images, icons, logos) and brand identifiers (colors, fonts) are deliberately replaced with generic placeholders or shifted alternatives. This skill NEVER produces a copy of the target. Use this for design study, self-owned site rebuilds with a fresh take, or building inspired-by alternatives. Triggers on natural-language requests to clone, copy, replicate, study, or rebuild any landing page or website — both English and Japanese. **English triggers**: "clone this site", "copy this LP", "copy this landing page", "rebuild this page", "replicate this site", "design study of", "inspired by this site", "make a copy of this site", "extract layout patterns from", "study the design of". **Japanese triggers (日本語)**: 「このLPをコピーして」「このサイトをコピーして」「このサイトをクローンして」「このページを再現して」「このサイトを真似して」「このサイトみたいなのを作って」「このデザインを参考にして」「このページを移植して」「このランディングページを真似して作って」「○○のサイトみたいなのが欲しい」「このサイトをパクって」. Despite the casual phrasing of these triggers, the skill always re-frames the work as a design study with placeholder content and hue-shifted palette — it will not produce a clone — and will surface this reframing to the user during the pre-flight legal acknowledgment step before any extraction begins.
 argument-hint: "<url1> [<url2> ...]"
 user-invocable: true
 ---
@@ -33,11 +33,19 @@ If any builder output appears to violate these, fix it before merging. If the us
 
 ### 0. Legal Acknowledgment
 
-Before doing anything else, present this message to the user verbatim and wait for **explicit** confirmation:
+Before doing anything else, present this message to the user verbatim **in the language the user invoked the skill in** (English or Japanese) and wait for **explicit** confirmation.
+
+**If the user invoked in English** (e.g. "clone this site", "copy this LP", "design study of"), present:
 
 > "This skill produces a **design-inspired template, not a clone**. All text, images, logos, favicons, and brand colors will be replaced with placeholders or hue-shifted alternatives. The goal is to learn from layout/composition patterns without copying the target's protected content. To proceed, reply with: **'I understand — proceed with the design study.'**"
 
-Only proceed on explicit acknowledgment. A bare "yes" is **not** sufficient — the user must indicate understanding of the design-study nature.
+**If the user invoked in Japanese** (e.g. 「このLPをコピーして」「このサイトを真似して」), present:
+
+> 「このスキルは**クローンではなく、デザインに着想を得たテンプレート**を生成します。テキスト・画像・ロゴ・favicon・ブランドカラーはすべてプレースホルダや hue-shift（色相を 20–40°ずらした）代替に置き換えられます。目的は、対象サイトの保護されたコンテンツを複製することなく、レイアウトや構成のパターンから学ぶことです。続行するには、次の文言で返答してください: **「理解しました — デザインスタディとして進めてください」** または英語で **「I understand — proceed with the design study.」**」
+
+Only proceed on explicit acknowledgment using one of the exact phrasings above. A bare "yes" / 「はい」 / 「OK」 is **not** sufficient — the user must indicate understanding of the design-study nature with the prescribed wording.
+
+Once acknowledged, internally re-frame any "clone / copy / 真似 / コピー" wording in the user's original request as "design study" for the rest of the session.
 
 ### 1. Robots.txt Check
 

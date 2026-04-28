@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-04-28 — Bilingual Triggers & Pre-Flight
+
+### Changed (skill description / triggers)
+
+`SKILL.md` `description:` field expanded so the skill auto-triggers on natural-language requests in both English and Japanese — including casual wordings the user is likely to actually type.
+
+**English triggers** (existing + added): "clone this site", "copy this LP", "copy this landing page", "rebuild this page", "replicate this site", "make a copy of this site", plus the prior "design study of", "inspired by this site", "extract layout patterns from", "study the design of".
+
+**Japanese triggers (new)**:
+- 「このLPをコピーして」
+- 「このサイトをコピーして」
+- 「このサイトをクローンして」
+- 「このページを再現して」
+- 「このサイトを真似して」
+- 「このサイトみたいなのを作って」
+- 「このデザインを参考にして」
+- 「このページを移植して」
+- 「このランディングページを真似して作って」
+- 「○○のサイトみたいなのが欲しい」
+- 「このサイトをパクって」
+
+Despite the casual phrasing of these triggers, the skill always re-frames the work as a design study with placeholder content and hue-shifted palette — it will not produce a clone. The pre-flight legal acknowledgment surfaces this reframing to the user before any extraction begins.
+
+### Changed (legal pre-flight)
+
+Phase 0 / Legal Acknowledgment now presents in the language the user invoked the skill in (English or Japanese), with both ack phrases accepted:
+- `"I understand — proceed with the design study."`
+- 「理解しました — デザインスタディとして進めてください」
+
+After acknowledgment, the skill internally re-frames any "clone / copy / 真似 / コピー" wording in the original request as "design study" for the rest of the session.
+
+Re-ran `scripts/sync-skills.mjs` to propagate to all 9 platform skill files.
+
 ## [0.4.1] - 2026-04-28 — Smoke-Test Validation & Audit Fixes
 
 ### Fixed (skill)
@@ -127,7 +160,8 @@ Forked from [`JCodesMore/ai-website-cloner-template@25dc8ef`](https://github.com
 - MIT license
 - README with badges, demo section, quick start, and star history
 
-[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.3.0...v0.3.1
