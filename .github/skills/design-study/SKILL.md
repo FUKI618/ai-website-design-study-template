@@ -154,27 +154,60 @@ Navigate to the target URL with browser MCP. **All extraction in this phase prod
 - Save to `docs/design-references/notes/<hostname>/` as **reference only**
 - These are NOT included in `public/` and are NOT shipped with the generated project
 
+> **MCP filesystem boundary note:** Browser MCP servers (Chrome MCP, Playwright MCP, Browserbase MCP) typically scope their allowed file-write roots to the **calling Claude Code session's CWD** — NOT to arbitrary absolute paths. If your skill session was started outside this project's directory, the MCP will refuse to write screenshots into `docs/design-references/notes/<hostname>/`.
+>
+> **Workaround:** save the screenshot to the MCP's allowed root with a relative filename (e.g. `linear-desktop-1440.png`), then move it into place via Bash:
+> ```bash
+> mkdir -p docs/design-references/notes/<hostname>/
+> mv <mcp-allowed-root>/linear-desktop-1440.png docs/design-references/notes/<hostname>/desktop-1440.png
+> ```
+> Prefer running the design-study skill from the template's project root so the MCP root coincides with the target output directory and no move is needed.
+
 ### Global Extraction (For Inspiration Notes Only)
 
 Save findings to `docs/research/INSPIRATION_NOTES.md`. This file documents the research process and the deliberate shifts applied — keep it for transparency.
 
 **Color palette (extract → shift → use shifted):**
 
+The extraction has TWO parts. Run BOTH and merge the results — count-based extraction alone is biased toward whatever surfaces have the most nested elements (typically inner mockup cards), and will misidentify the page's actual background.
+
 ```javascript
-// Run via browser MCP — extract dominant colors as notes
-const elements = [...document.querySelectorAll('*')].slice(0, 500);
-const counts = {};
-elements.forEach(el => {
-  const cs = getComputedStyle(el);
-  ['color', 'backgroundColor', 'borderColor'].forEach(p => {
-    const v = cs[p];
-    if (v && v !== 'rgba(0, 0, 0, 0)' && v !== 'rgb(0, 0, 0)') counts[v] = (counts[v] || 0) + 1;
+// Run via browser MCP — extract dominant colors AND authoritative page surfaces
+(function () {
+  // PART A — authoritative page surfaces (treat these as ground truth for "page bg")
+  const authoritative = {
+    htmlBg: getComputedStyle(document.documentElement).backgroundColor,
+    bodyBg: getComputedStyle(document.body).backgroundColor,
+    mainBg: document.querySelector('main')
+      ? getComputedStyle(document.querySelector('main')).backgroundColor
+      : null,
+    bodyColor: getComputedStyle(document.body).color,
+  };
+
+  // PART B — count-based extraction (good for accent / surface tiers)
+  const elements = [...document.querySelectorAll('*')].slice(0, 500);
+  const counts = {};
+  elements.forEach((el) => {
+    const cs = getComputedStyle(el);
+    ['color', 'backgroundColor', 'borderColor'].forEach((p) => {
+      const v = cs[p];
+      if (v && v !== 'rgba(0, 0, 0, 0)' && v !== 'transparent')
+        counts[v] = (counts[v] || 0) + 1;
+    });
   });
-});
-JSON.stringify(Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 12));
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 15);
+
+  return JSON.stringify({ authoritative, top }, null, 2);
+})();
 ```
 
-For each dominant color: rotate hue **20–40°** (you choose the direction — pick what creates a coherent shifted palette), optionally adjust saturation by ±10%, lightness by ±5%. Record both original and shifted values in `INSPIRATION_NOTES.md`. Apply ONLY the shifted palette to `globals.css`.
+**Interpretation rules:**
+
+1. **Page background = `authoritative.bodyBg` (or `mainBg` if `bodyBg` is `rgba(0,0,0,0)`/transparent).** The count-based top color is NOT the page background — it's whichever surface tier has the deepest DOM. (Example failure mode: a site with a dark page bg but light product-mockup cards will surface the light-card color as #1 in the count, which is wrong for "page bg".)
+2. **Accent and secondary surfaces** are picked from `top[]`, excluding values already classified as page bg, body text, or pure black/white.
+3. For each color you decide to use: rotate hue **20–40°** (you choose the direction — pick what creates a coherent shifted palette), optionally adjust saturation by ±10%, lightness by ±5%.
+4. **Grayscale colors** (saturation < 5%) won't change perceptibly under hue rotation — that's correct, leave them. The shift is meaningful only for chromatic colors (the brand accent, gradient stops, illustration tints).
+5. Record both original and shifted values in `INSPIRATION_NOTES.md` with their semantic role (page-bg / accent / muted-text / etc.). Apply ONLY the shifted palette to `globals.css`.
 
 **Typography pattern (not the actual fonts):**
 - Note the heading-to-body ratio (e.g., "h1 is ~4x body, h2 is ~2.5x body, body is 16px/1.6")
