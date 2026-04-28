@@ -103,6 +103,20 @@ When prompted, reply with the exact ack: **`I understand — proceed with the de
 - **Tailwind CSS v4** — oklch design tokens (hue-shifted from target)
 - **Lucide React** — icons (the only icon source — no extracted SVGs from target)
 
+## Three-tier LP stack
+
+This template is designed to plug into a complete landing-page workflow:
+
+| Tier | Tool | Role |
+|---|---|---|
+| 🔍 Research (optional) | **Exa** (`exa@claude-plugins-official`) | Phase 0.5 of the skill: paraphrased category research → informs placeholder copy beyond Lorem ipsum |
+| 🎨 Build (required) | **design-study + Next.js** (this template) | Phases 1–5: structural pattern extraction, hue-shifted palette, inspired-by output |
+| 📊 Analytics (optional but wired in) | **ClickHouse** (Cloud or self-hosted) | Cookie-less server-side event tracking via `/api/track`. Ships a daily rollup view and a 180-day retention TTL |
+
+Full setup walkthrough: [`STACK.md`](./STACK.md).
+
+The analytics layer **degrades gracefully**: with no `CLICKHOUSE_*` env vars, `/api/track` returns 204 and the LP runs identically. Wire it up when you're ready to ship.
+
 ## Verified Pipeline
 
 The skill's pre-flight + reconnaissance phases were smoke-tested against `linear.app` on 2026-04-28. The hue-shift correctly transformed Linear's signature indigo accent (`rgb(94, 106, 210)`) into a clearly distinct violet (`rgb(134, 94, 210)`) at +27°, with grayscale tiers preserved as expected. Two SKILL.md improvements were surfaced and applied during the run.

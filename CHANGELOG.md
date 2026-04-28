@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-28 — Three-Tier LP Stack: Exa + design-study + ClickHouse
+
+This release wires the template into a complete landing-page workflow. Each layer is independent and the analytics layer degrades gracefully when not configured.
+
+### Added — Layer 3: ClickHouse analytics
+
+Cookie-less, server-side event tracking is now built in:
+
+- `src/lib/clickhouse.ts` — lazy server-side client; returns null when env vars are missing
+- `src/lib/analytics.ts` — client-side `track()`, `trackPageView()`, `trackCta()` using `navigator.sendBeacon` (fire-and-forget, never throws)
+- `src/app/api/track/route.ts` — Node-runtime route handler that ingests events into ClickHouse; 204 no-op when credentials are not configured
+- `db/migrations/001_events.sql` — `events` table (`MergeTree`, partitioned by month, 180-day TTL) plus a `events_daily` materialized view for rollup queries
+- `.env.example` — documents `CLICKHOUSE_URL`, `CLICKHOUSE_USER`, `CLICKHOUSE_PASSWORD`, `CLICKHOUSE_DATABASE`, `CLICKHOUSE_EVENTS_TABLE`
+- New dependency: `@clickhouse/client@^1.18.3`
+
+**Graceful degradation:** with no env vars, `/api/track` returns 204 and `npm run build` still passes. The template ships analytics-ready but credential-free.
+
+### Added — Layer 1: Phase 0.5 Exa Research
+
+`SKILL.md` now has a Phase 0.5 between the legal pre-flight and Phase 1 reconnaissance:
+
+- Detects the Exa MCP plugin (`mcp__plugin_exa_exa__*`) and skips silently if not installed
+- Runs 2–3 focused *category* searches (never the target itself)
+- Saves paraphrased findings to `docs/research/<hostname>/EXA_RESEARCH.md`
+- Output feeds Phase 3 component specs as the "Content Schema" so placeholder copy reflects category conventions instead of pure Lorem ipsum
+
+Hard rules added: paraphrase only, never quote verbatim; numbers found via Exa become "shape" of placeholder stats (illustrative numbers, not exact); the target's own pages remain out of scope even when surfaced by Exa.
+
+### Added — Documentation
+
+- `STACK.md` — the three-tier walkthrough with ClickHouse Cloud setup, Docker self-host instructions, useful SQL queries (top events, session funnel, CTA leaderboard), and graceful-degradation guarantees
+- README gains a "Three-tier LP stack" section linking out to `STACK.md`
+
+### Changed
+
+- `SKILL.md` Phase 4 now instructs builders to wire `trackPageView` and `trackCta` from `@/lib/analytics` when assembling the page
+
+Re-ran `scripts/sync-skills.mjs` to propagate to all 9 platform skill files.
+
 ## [0.4.2] - 2026-04-28 — Bilingual Triggers & Pre-Flight
 
 ### Changed (skill description / triggers)
@@ -160,7 +199,8 @@ Forked from [`JCodesMore/ai-website-cloner-template@25dc8ef`](https://github.com
 - MIT license
 - README with badges, demo section, quick start, and star history
 
-[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.3.1...v0.4.0

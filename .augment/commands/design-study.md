@@ -70,6 +70,52 @@ Create: `docs/research/`, `docs/research/components/`, `docs/design-references/n
 
 > Note: there is **no** `public/images/` step from the target. The generated project does not contain any binary asset extracted from the target.
 
+## Phase 0.5: Exa Research (optional but recommended)
+
+If the user has the **Exa MCP plugin** installed (`exa@claude-plugins-official`), invoke it BEFORE Phase 1's interaction sweep to gather **content material** that will inform your placeholder copy. This is what makes the inspired-by output feel substantive instead of generic Lorem ipsum.
+
+### How to detect Exa availability
+
+Look for tools matching `mcp__plugin_exa_exa__*` in your tool list. If none, skip this phase silently — the rest of the skill works without Exa.
+
+### What to research with Exa
+
+For each target URL, run **two or three** focused searches:
+
+1. **Domain proof points** — search the target's *category* (NOT the target itself), e.g. "modern project management tool product hero copy patterns 2025", "B2B SaaS landing page social proof formats". Capture 3–5 representative quotes / phrasing patterns.
+2. **Statistic / data idea bank** — search for current category statistics, e.g. "developer productivity time saved per week stats 2025". These become the **shape** of your placeholder stats (the actual numbers in the output should be illustrative placeholders, not Exa's exact numbers).
+3. **Hook / headline patterns** — search "best landing page headline patterns SaaS 2025" to learn current category conventions.
+
+### Saving the research
+
+Save findings to `docs/research/<hostname>/EXA_RESEARCH.md` with this structure:
+
+```markdown
+# Exa Research — <hostname>
+
+## Search 1: <query>
+- key finding 1 (paraphrased, not quoted verbatim)
+- key finding 2
+- pattern observed: <e.g., "category leaders use 4-7 word hero headlines, present-tense verb">
+
+## Search 2: <query>
+…
+
+## Implications for our content schema
+- Hero headline: should be 4-7 words, action-oriented, present tense
+- Subhead: state value prop in 1 sentence with concrete benefit framing
+- Social proof: use a 3-logo + 1-quote pattern, not a wall of logos
+- (etc. — distilled patterns to feed into Phase 3 spec files)
+```
+
+### Hard rules for Exa research
+
+- **Paraphrase, never quote verbatim.** Even from category research, never copy a sentence wholesale. Distill to *patterns*.
+- **Numbers are illustrative.** Statistics found via Exa become *the shape* of placeholder stats — actual numbers in the output should be obviously placeholder ("47k+ teams", not the real "53,217 customers" Exa surfaced).
+- **The target site's own copy is still off-limits.** Even if Exa returns the target's own pages, treat them as out-of-scope and exclude from `EXA_RESEARCH.md`.
+
+The research output feeds into Phase 3 component specs as the "Content Schema" — your placeholder copy is now informed by category conventions instead of pure Lorem ipsum.
+
 ## Scope Defaults
 
 - **Fidelity level:** **Pattern fidelity, not pixel fidelity.** Match layout grid, vertical rhythm, component composition, interaction model. Colors, content, and imagery are deliberately distinct.
@@ -452,6 +498,7 @@ Wire everything together in `src/app/page.tsx`:
 - Implement page-level layout from your topology doc
 - Connect placeholder content to component props
 - Implement page-level behaviors (scroll snap, scroll-driven animations, smooth scroll)
+- **Wire analytics** — import `trackPageView` and `trackCta` from `@/lib/analytics` and call them on mount and from CTA `onClick` handlers respectively. Wrap call sites with `'use client'` boundaries as needed. The analytics module is fire-and-forget and silently no-ops if `CLICKHOUSE_*` env vars are not set, so it is safe to wire up unconditionally.
 - Verify: `npm run build` passes
 
 ## Phase 5: Pattern Verification (replaces Visual QA Diff)

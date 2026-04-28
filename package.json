@@ -1,6 +1,6 @@
 {
   "name": "ai-website-design-study-template",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "private": true,
   "description": "Study a public website's design patterns and build an inspired-by Next.js template using AI coding agents (placeholder content only — not a cloner)",
   "author": "FUKI618 (fork of JCodesMore/ai-website-cloner-template)",
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
+    "@clickhouse/client": "^1.18.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.6.0",
