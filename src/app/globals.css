@@ -48,25 +48,31 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Default theme: dark surface + violet accent.
+ * Palette inspired-by linear.app with a +27° hue shift on the accent
+ * (indigo rgb(94,106,210) → violet rgb(134,94,210)).
+ * See docs/research/linear.app/INSPIRATION_NOTES.md for the full
+ * original-vs-shifted comparison.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(0.135 0.005 264);     /* near-black ≈ rgb(8,9,10) */
+  --foreground: oklch(0.97 0.002 264);      /* near-white ≈ rgb(247,248,248) */
+  --card: oklch(0.22 0.005 264);            /* dark surface ≈ rgb(35,37,42) */
+  --card-foreground: oklch(0.97 0.002 264);
+  --popover: oklch(0.22 0.005 264);
+  --popover-foreground: oklch(0.97 0.002 264);
+  --primary: oklch(0.55 0.20 290);          /* SHIFTED accent: violet (was indigo) */
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.27 0.005 264);
+  --secondary-foreground: oklch(0.97 0.002 264);
+  --muted: oklch(0.27 0.005 264);
+  --muted-foreground: oklch(0.65 0.005 264);
+  --accent: oklch(0.55 0.20 290);
+  --accent-foreground: oklch(0.99 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.30 0.005 264);
+  --input: oklch(0.27 0.005 264);
+  --ring: oklch(0.55 0.20 290);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

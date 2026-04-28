@@ -1,9 +1,19 @@
+import { Cta } from "@/components/Cta";
+import { FeatureGrid } from "@/components/FeatureGrid";
+import { Footer } from "@/components/Footer";
+import { Hero } from "@/components/Hero";
+import { Nav } from "@/components/Nav";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="text-muted-foreground">
-        Design study not yet built. Run <code className="font-mono text-foreground">/design-study &lt;url&gt;</code> to start.
-      </p>
-    </main>
+    <>
+      <Nav />
+      <main className="flex flex-1 flex-col">
+        <Hero />
+        <FeatureGrid />
+        <Cta />
+      </main>
+      <Footer />
+    </>
   );
 }
