@@ -12,27 +12,64 @@ This is a fork of [`JCodesMore/ai-website-cloner-template`](https://github.com/J
 
 Point it at a URL, run `/design-study`, and your AI agent will inspect the site, extract structural design patterns, write component specs, and dispatch parallel builders to construct an inspired-by template.
 
-## Quick Start
+## Quick Start — pick the launch path that fits
 
-1. **Clone this repository**
-   ```bash
-   git clone https://github.com/FUKI618/ai-website-design-study-template.git my-design-study
-   cd my-design-study
-   ```
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-3. **Start your AI agent** — Claude Code recommended:
-   ```bash
-   claude --chrome
-   ```
-4. **Run the skill**:
-   ```
-   /design-study <target-url1> [<target-url2> ...]
-   ```
-5. **Acknowledge the legal pre-flight** when prompted (you must explicitly confirm understanding that the output is design-inspired, not a clone)
-6. **Customize** — the output is a starting point. Push it further from the target with your own copy, your own branding, and your own design refinements
+There are three ways to invoke `/design-study`. They differ only in how the skill is registered with your AI agent.
+
+### Path A — One-line bootstrap (zsh helper)
+
+Drop this function into your `~/.zshrc` once:
+
+```bash
+design-study() {
+  if [ -z "$1" ]; then print -u2 "usage: design-study <target-url>"; return 1; fi
+  local slug="$(date +%Y%m%d-%H%M)-$(echo "$1" | sed -E 's|^https?://||; s|/.*||; s|[^a-zA-Z0-9]|-|g' | cut -c1-32)"
+  local dir="$HOME/Code/studies/$slug"
+  mkdir -p "$HOME/Code/studies"
+  [ -d "$dir" ] && { print -u2 "exists: $dir"; return 1; }
+  git clone --quiet https://github.com/FUKI618/ai-website-design-study-template.git "$dir" || return 1
+  cd "$dir" || return 1
+  npm install --silent --no-fund --no-audit || return 1
+  print "✓ ready. in Claude Code, type:  /design-study $1"
+  print "         then ack with:  I understand — proceed with the design study."
+  claude
+}
+```
+
+Then any time you want to study a site:
+
+```bash
+design-study https://target.example/
+```
+
+→ fresh study repo cloned under `~/Code/studies/<date-slug>/`, deps installed, Claude Code launched in that directory. You then type the slash command shown.
+
+### Path B — User-scope skill (run `/design-study` from anywhere)
+
+If you want `/design-study` available globally in every Claude Code session (regardless of which directory it was launched from), symlink the skill into your user-scope:
+
+```bash
+git clone https://github.com/FUKI618/ai-website-design-study-template.git ~/Code/ai-website-design-study-template
+mkdir -p ~/.claude/skills
+ln -sf ~/Code/ai-website-design-study-template/.claude/skills/design-study ~/.claude/skills/design-study
+```
+
+Restart Claude Code. The slash command is now globally available. **Caveat:** the skill needs a properly-scaffolded Next.js project (this template) to write into; running it in an unrelated directory will fail at the `npm run build` pre-flight. Combine with Path A or use `gh repo create --template …` first.
+
+### Path C — Project-local (classic)
+
+Treat this repo as a one-off scaffold:
+
+```bash
+gh repo create my-study --template FUKI618/ai-website-design-study-template --clone
+cd my-study
+npm install
+claude --chrome
+# in Claude Code:
+/design-study <target-url>
+```
+
+When prompted, reply with the exact ack: **`I understand — proceed with the design study.`**
 
 > Using a different agent? Open `AGENTS.md` for project instructions — most agents pick it up automatically.
 
