@@ -1,5 +1,7 @@
+"use client";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackCta } from "@/lib/analytics";
 
 export function Cta() {
   return (
@@ -19,11 +21,22 @@ export function Cta() {
           pitch that mirrors the cadence of the rest of the page.
         </p>
         <div className="mt-10 flex items-center gap-3">
-          <Button render={<a href="#" />} nativeButton={false} size="lg">
+          <Button
+            render={<a href="#" />}
+            nativeButton={false}
+            size="lg"
+            onClick={() => trackCta("footer_cta_start_building")}
+          >
             Start building
             <ArrowRight className="size-4" />
           </Button>
-          <Button render={<a href="#" />} nativeButton={false} variant="outline" size="lg">
+          <Button
+            render={<a href="#" />}
+            nativeButton={false}
+            variant="outline"
+            size="lg"
+            onClick={() => trackCta("footer_cta_talk_to_us")}
+          >
             Talk to us
           </Button>
         </div>

@@ -1,6 +1,8 @@
+"use client";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
+import { trackCta } from "@/lib/analytics";
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
@@ -21,6 +23,7 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 className="transition-colors hover:text-foreground"
+                onClick={() => trackCta("nav_link", { label: l.label })}
               >
                 {l.label}
               </Link>
@@ -28,10 +31,21 @@ export function Nav() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <Button render={<a href="#" />} nativeButton={false} variant="ghost" size="sm">
+          <Button
+            render={<a href="#" />}
+            nativeButton={false}
+            variant="ghost"
+            size="sm"
+            onClick={() => trackCta("nav_signin")}
+          >
             Sign in
           </Button>
-          <Button render={<a href="#" />} nativeButton={false} size="sm">
+          <Button
+            render={<a href="#" />}
+            nativeButton={false}
+            size="sm"
+            onClick={() => trackCta("nav_get_started")}
+          >
             Get started
           </Button>
         </div>

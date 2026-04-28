@@ -1,5 +1,7 @@
+"use client";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackCta } from "@/lib/analytics";
 
 export function Hero() {
   return (
@@ -23,11 +25,22 @@ export function Hero() {
           how your team plans, builds, and ships with a single source of truth.
         </p>
         <div className="mt-10 flex items-center justify-center gap-3">
-          <Button render={<a href="#" />} nativeButton={false} size="lg">
+          <Button
+            render={<a href="#" />}
+            nativeButton={false}
+            size="lg"
+            onClick={() => trackCta("hero_start_building")}
+          >
             Start building
             <ArrowRight className="size-4" />
           </Button>
-          <Button render={<a href="#" />} nativeButton={false} variant="outline" size="lg">
+          <Button
+            render={<a href="#" />}
+            nativeButton={false}
+            variant="outline"
+            size="lg"
+            onClick={() => trackCta("hero_watch_tour")}
+          >
             Watch the tour
           </Button>
         </div>
