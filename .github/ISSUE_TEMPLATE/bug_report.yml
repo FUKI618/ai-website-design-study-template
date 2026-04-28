@@ -23,7 +23,7 @@ body:
       label: Steps to Reproduce
       description: Step-by-step instructions to reproduce the behavior.
       placeholder: |
-        1. Run `/clone-website https://example.com`
+        1. Run `/design-study https://example.com`
         2. Wait for agents to finish
         3. See error in terminal...
     validations:
@@ -49,7 +49,7 @@ body:
     id: target-url
     attributes:
       label: Target URL
-      description: The website URL you were trying to clone (if applicable).
+      description: The website URL you were trying to study (if applicable).
       placeholder: https://example.com
 
   - type: dropdown

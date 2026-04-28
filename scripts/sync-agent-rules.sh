@@ -74,7 +74,7 @@ write_file "$REPO_ROOT/.clinerules" "$RESOLVED_CONTENT"
 
 # Continue — .continue/rules/project.md
 CONTINUE_FRONTMATTER="---
-description: Project conventions for AI Website Clone Template
+description: Project conventions for AI Website Design-Study Template
 alwaysApply: true
 ---"
 write_file "$REPO_ROOT/.continue/rules/project.md" "$CONTINUE_FRONTMATTER

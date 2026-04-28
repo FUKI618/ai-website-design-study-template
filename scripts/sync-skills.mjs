@@ -1,18 +1,42 @@
 #!/usr/bin/env node
 
 /**
- * Generates clone-website command/skill files for all supported AI coding platforms.
- * Source of truth: .claude/skills/clone-website/SKILL.md
+ * Generates design-study command/skill files for all supported AI coding platforms.
+ * Source of truth: .claude/skills/design-study/SKILL.md
  *
  * Usage: node scripts/sync-skills.mjs
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE = join(ROOT, '.claude', 'skills', 'clone-website', 'SKILL.md');
+const SKILL_NAME = 'design-study';
+const SOURCE = join(ROOT, '.claude', 'skills', SKILL_NAME, 'SKILL.md');
+const SHORT_DESC =
+  'Extract design patterns from a public website and build an inspired-by Next.js template (placeholder content only)';
+
+// --- Cleanup legacy clone-website artifacts (one-time, safe to leave in) ---
+
+const LEGACY_PATHS = [
+  '.codex/skills/clone-website',
+  '.github/skills/clone-website',
+  '.cursor/commands/clone-website.md',
+  '.windsurf/workflows/clone-website.md',
+  '.gemini/commands/clone-website.toml',
+  '.opencode/commands/clone-website.md',
+  '.augment/commands/clone-website.md',
+  '.continue/commands/clone-website.md',
+  '.amazonq/cli-agents/clone-website.json',
+];
+LEGACY_PATHS.forEach((p) => {
+  const full = join(ROOT, p);
+  if (existsSync(full)) {
+    rmSync(full, { recursive: true, force: true });
+    console.log(`  - removed legacy: ${p}`);
+  }
+});
 
 // --- Parse source skill ---
 
@@ -20,7 +44,7 @@ let raw;
 try {
   raw = readFileSync(SOURCE, 'utf8').replace(/\r\n/g, '\n');
 } catch {
-  console.error(`Error: Source skill not found at .claude/skills/clone-website/SKILL.md`);
+  console.error(`Error: Source skill not found at .claude/skills/${SKILL_NAME}/SKILL.md`);
   process.exit(1);
 }
 
@@ -31,7 +55,6 @@ if (!match) {
 }
 
 const body = match[2];
-const shortDesc = 'Reverse-engineer and clone any website as a pixel-perfect replica';
 
 // --- Helpers ---
 
@@ -43,69 +66,69 @@ function write(relPath, content) {
 }
 
 const HEADER =
-  '<!-- AUTO-GENERATED from .claude/skills/clone-website/SKILL.md \u2014 do not edit directly.\n' +
+  `<!-- AUTO-GENERATED from .claude/skills/${SKILL_NAME}/SKILL.md \u2014 do not edit directly.\n` +
   '     Run `node scripts/sync-skills.mjs` to regenerate. -->\n\n';
 
 const noArgs = (text) => text.replace(/\$ARGUMENTS/g, 'the target URL provided by the user');
 
 // --- Generate ---
 
-console.log('Syncing clone-website skill to all platforms...');
-console.log(`  Source: .claude/skills/clone-website/SKILL.md\n`);
+console.log(`Syncing ${SKILL_NAME} skill to all platforms...`);
+console.log(`  Source: .claude/skills/${SKILL_NAME}/SKILL.md\n`);
 
 // 1. Codex CLI — same SKILL.md format, same $ARGUMENTS syntax
-write('.codex/skills/clone-website/SKILL.md', raw);
+write(`.codex/skills/${SKILL_NAME}/SKILL.md`, raw);
 
 // 2. GitHub Copilot — same SKILL.md format
-write('.github/skills/clone-website/SKILL.md', raw);
+write(`.github/skills/${SKILL_NAME}/SKILL.md`, raw);
 
 // 3. Cursor — plain markdown, no argument substitution support
-write('.cursor/commands/clone-website.md', HEADER + noArgs(body));
+write(`.cursor/commands/${SKILL_NAME}.md`, HEADER + noArgs(body));
 
 // 4. Windsurf — markdown workflow
-write('.windsurf/workflows/clone-website.md', HEADER + noArgs(body));
+write(`.windsurf/workflows/${SKILL_NAME}.md`, HEADER + noArgs(body));
 
 // 5. Gemini CLI — TOML format, {{args}} for arguments
 const geminiBody = body.replace(/\$ARGUMENTS/g, '{{args}}');
 write(
-  '.gemini/commands/clone-website.toml',
-  `# AUTO-GENERATED from .claude/skills/clone-website/SKILL.md\n` +
+  `.gemini/commands/${SKILL_NAME}.toml`,
+  `# AUTO-GENERATED from .claude/skills/${SKILL_NAME}/SKILL.md\n` +
     `# Run \`node scripts/sync-skills.mjs\` to regenerate.\n\n` +
-    `description = "${shortDesc}"\n\n` +
+    `description = "${SHORT_DESC}"\n\n` +
     `[prompt]\ntext = '''\n${geminiBody}\n'''\n`
 );
 
 // 6. OpenCode — markdown + YAML frontmatter, $ARGUMENTS works natively
 write(
-  '.opencode/commands/clone-website.md',
-  `---\ndescription: "${shortDesc}"\n---\n${HEADER}${body}`
+  `.opencode/commands/${SKILL_NAME}.md`,
+  `---\ndescription: "${SHORT_DESC}"\n---\n${HEADER}${body}`
 );
 
 // 7. Augment Code — markdown + YAML frontmatter
 write(
-  '.augment/commands/clone-website.md',
-  `---\ndescription: "${shortDesc}"\nargument-hint: "<url>"\n---\n${HEADER}${body}`
+  `.augment/commands/${SKILL_NAME}.md`,
+  `---\ndescription: "${SHORT_DESC}"\nargument-hint: "<url>"\n---\n${HEADER}${body}`
 );
 
 // 8. Continue — prompt file with invokable: true
 write(
-  '.continue/commands/clone-website.md',
-  `---\nname: clone-website\ndescription: "${shortDesc}"\ninvokable: true\n---\n${HEADER}${body}`
+  `.continue/commands/${SKILL_NAME}.md`,
+  `---\nname: ${SKILL_NAME}\ndescription: "${SHORT_DESC}"\ninvokable: true\n---\n${HEADER}${body}`
 );
 
 // 9. Amazon Q — JSON agent definition
 write(
-  '.amazonq/cli-agents/clone-website.json',
+  `.amazonq/cli-agents/${SKILL_NAME}.json`,
   JSON.stringify(
     {
-      name: 'clone-website',
-      description: shortDesc,
+      name: SKILL_NAME,
+      description: SHORT_DESC,
       prompt: noArgs(body),
-      fileContext: ['AGENTS.md', 'docs/research/**'],
+      fileContext: ['AGENTS.md', 'LEGAL.md', 'docs/research/**'],
     },
     null,
     2
   ) + '\n'
 );
 
-console.log('\nDone! 9 platform command files generated from source skill.');
+console.log(`\nDone! 9 platform command files generated from source skill.`);

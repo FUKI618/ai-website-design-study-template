@@ -7,7 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-28 — Design-Study Fork
+
+### Fork divergence
+
+Forked from [`JCodesMore/ai-website-cloner-template@25dc8ef`](https://github.com/JCodesMore/ai-website-cloner-template) and pivoted from a website cloner to a **design-study tool**. Output is now a structurally-similar but visibly distinct inspired-by template, never a clone. See [`LEGAL.md`](./LEGAL.md) for the rationale and full behavior diff.
+
+### Added
+- `LEGAL.md` documenting the fork's legal posture, allowed/disallowed uses, and the full behavior diff vs. upstream
+- `templates/DISCLAIMER.md` template emitted into every generated project on completion, recording target URL, hue shift applied, font substitutions, and the safeguards confirmed during generation
+- Mandatory legal pre-flight in the skill — explicit user acknowledgment + `robots.txt` check before any extraction begins
+- Hard rules enforcement in the skill: no verbatim copy > 5 words, no asset downloads, hue-shifted palette only, generic fonts only, no logo tracing, no favicon extraction
+- `INSPIRATION_NOTES.md` artifact capturing original-vs-shifted palette and font-mapping decisions for transparency
+
 ### Changed
+- Renamed skill: `/clone-website` → `/design-study`
+- Skill source path: `.claude/skills/clone-website/SKILL.md` → `.claude/skills/design-study/SKILL.md`
+- Phase 5 renamed: "Visual QA Diff" → "Pattern Verification" — output must look **clearly different** from target (the inverse of the original's pixel-perfect goal)
+- Component spec template: replaced "Text Content (verbatim)" with "Content Schema" (shape only); replaced "Assets" with "Asset Strategy" (Unsplash/Lucide/generic)
+- Foundation phase: no asset downloads from target; generates placeholder monogram favicon; generic fonts only
+- Color extraction: target palette captured AS NOTES, then hue-shifted 20–40° before being written to `globals.css`
+- Package metadata, README, AGENTS.md updated to reflect the design-study positioning
+
+### Removed
+- Asset download script pattern from the skill (no `scripts/download-assets.mjs` to be generated against target)
+- Verbatim text extraction guidance — replaced with paraphrasing and Lorem ipsum guidance
+- "Real Content, Real Assets" guiding principle — replaced with "Generic Content Only"
+
+## [0.3.1] - 2026-03-29 — upstream
+
+### Changed (upstream baseline)
 - Raised the project Node.js baseline to 24 across local development, CI, Docker, and contributor-facing documentation
 
 ## [0.3.1] - 2026-03-29
@@ -72,7 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT license
 - README with badges, demo section, quick start, and star history
 
-[Unreleased]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.1.1...v0.2.0
