@@ -1,6 +1,6 @@
 {
   "name": "ai-website-design-study-template",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "Study a public website's design patterns and build an inspired-by Next.js template using AI coding agents (placeholder content only — not a cloner)",
   "author": "FUKI618 (fork of JCodesMore/ai-website-cloner-template)",

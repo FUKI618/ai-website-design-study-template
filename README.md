@@ -66,6 +66,12 @@ Point it at a URL, run `/design-study`, and your AI agent will inspect the site,
 - **Tailwind CSS v4** — oklch design tokens (hue-shifted from target)
 - **Lucide React** — icons (the only icon source — no extracted SVGs from target)
 
+## Verified Pipeline
+
+The skill's pre-flight + reconnaissance phases were smoke-tested against `linear.app` on 2026-04-28. The hue-shift correctly transformed Linear's signature indigo accent (`rgb(94, 106, 210)`) into a clearly distinct violet (`rgb(134, 94, 210)`) at +27°, with grayscale tiers preserved as expected. Two SKILL.md improvements were surfaced and applied during the run.
+
+Full report and artifacts: [`docs/research/linear.app/SMOKE_TEST_REPORT.md`](./docs/research/linear.app/SMOKE_TEST_REPORT.md), [`docs/research/linear.app/INSPIRATION_NOTES.md`](./docs/research/linear.app/INSPIRATION_NOTES.md).
+
 ## How It Works
 
 The `/design-study` skill runs a multi-phase pipeline with **mandatory legal pre-flight**:

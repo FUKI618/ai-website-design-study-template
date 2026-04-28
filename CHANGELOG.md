@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-04-28 — Smoke-Test Validation & Audit Fixes
+
+### Fixed (skill)
+
+Surfaced and addressed during a smoke-test run against `linear.app`:
+
+- **Browser MCP filesystem boundary** — Phase 1 / Screenshots in SKILL.md now documents that browser MCP servers scope file-write roots to the calling Claude Code session's CWD. Includes the `mv`-from-MCP-root workaround and recommends running the skill from the project root.
+- **Color extraction bias** — Phase 1 / Color palette extraction now runs in two parts: (A) authoritative `html`/`body`/`main` background capture as ground truth, (B) count-based top-15 for accent and surface tiers. Without this, sites with a dark page background but light internal product-mockup cards (such as Linear) were misidentified as light-themed.
+
+Re-ran `scripts/sync-skills.mjs` to propagate both fixes to all 9 platform skill files.
+
+### Fixed (dependencies)
+
+- `next` bumped from `16.2.1` → `^16.2.4` (resolves `path-to-regexp` HIGH ReDoS via npm audit fix)
+- Added `overrides` for `postcss` `^8.5.10` (resolves CSS Stringify XSS without downgrading `next` to a pre-9.x major)
+- `npm audit` now reports **0 vulnerabilities** (was 2 high + 4 moderate at fork time)
+
+### Added
+
+- `.github/workflows/ci.yml` gains a `workflow_dispatch` trigger so the fork's CI can be triggered manually via `gh workflow run CI`
+- Smoke-test artifacts committed for transparency:
+  - `docs/research/linear.app/SMOKE_TEST_REPORT.md`
+  - `docs/research/linear.app/INSPIRATION_NOTES.md`
+  - `docs/design-references/notes/linear.app/desktop-1440.png`
+- README gains a "Verified Pipeline" section linking to the smoke-test report
+
 ## [0.4.0] - 2026-04-28 — Design-Study Fork
 
 ### Fork divergence
@@ -101,7 +127,8 @@ Forked from [`JCodesMore/ai-website-cloner-template@25dc8ef`](https://github.com
 - MIT license
 - README with badges, demo section, quick start, and star history
 
-[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/FUKI618/ai-website-design-study-template/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/JCodesMore/ai-website-cloner-template/compare/v0.2.0...v0.3.0
